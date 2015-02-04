@@ -168,7 +168,7 @@ NSString *const kTwitterServiceName = @"Twitter";
     __weak typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         typeof(self) sself = wself;
-        if (sself != nil) {
+        if (sself) {
             for (Tweet *tweet in tweets) {
                 if ([tweet tweetId] < sself->_minIdInThatSession)
                     sself->_minIdInThatSession = [tweet tweetId] - 1;

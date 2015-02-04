@@ -12,6 +12,7 @@
 		CC16E2F41A76538700E1B081 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CC16E2F21A76538700E1B081 /* SettingsViewController.xib */; };
 		CC16E2F91A77631100E1B081 /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = CC16E2F81A77631100E1B081 /* Tweet.m */; };
 		CC485B6E1A7E94E6009B60E8 /* Prefetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = CC485B6D1A7E94E6009B60E8 /* Prefetcher.m */; };
+		CC485B711A824CF4009B60E8 /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = CC485B701A824CF4009B60E8 /* Parser.m */; };
 		CC782E041A70ED2100A24CE3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CC782E031A70ED2100A24CE3 /* main.m */; };
 		CC782E071A70ED2100A24CE3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC782E061A70ED2100A24CE3 /* AppDelegate.m */; };
 		CC782E0A1A70ED2100A24CE3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC782E091A70ED2100A24CE3 /* ViewController.m */; };
@@ -22,7 +23,6 @@
 		CC782E2C1A70EED600A24CE3 /* Tweets.m in Sources */ = {isa = PBXBuildFile; fileRef = CC782E2B1A70EED600A24CE3 /* Tweets.m */; };
 		CCC887541A77870C00EDA5E6 /* CustomTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCC887531A77870C00EDA5E6 /* CustomTableCell.xib */; };
 		CCC887571A77913200EDA5E6 /* CustomTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC887561A77913200EDA5E6 /* CustomTableCell.m */; };
-		CCC8875D1A77CB9100EDA5E6 /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC8875C1A77CB9100EDA5E6 /* Parser.m */; };
 		CCC887601A77CDEC00EDA5E6 /* CacheController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC8875F1A77CDEC00EDA5E6 /* CacheController.m */; };
 		CCC887631A7A24C500EDA5E6 /* DBService.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC887621A7A24C500EDA5E6 /* DBService.m */; };
 		CCC887661A7A2C1E00EDA5E6 /* FileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC887651A7A2C1E00EDA5E6 /* FileSystem.m */; };
@@ -49,6 +49,8 @@
 		CC16E2F81A77631100E1B081 /* Tweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tweet.m; sourceTree = "<group>"; };
 		CC485B6C1A7E94E6009B60E8 /* Prefetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefetcher.h; sourceTree = "<group>"; };
 		CC485B6D1A7E94E6009B60E8 /* Prefetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Prefetcher.m; sourceTree = "<group>"; };
+		CC485B6F1A824CF4009B60E8 /* Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parser.h; sourceTree = "<group>"; };
+		CC485B701A824CF4009B60E8 /* Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Parser.m; sourceTree = "<group>"; };
 		CC782DFE1A70ED2100A24CE3 /* Test_project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test_project.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC782E021A70ED2100A24CE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CC782E031A70ED2100A24CE3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -67,8 +69,6 @@
 		CCC887531A77870C00EDA5E6 /* CustomTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTableCell.xib; sourceTree = "<group>"; };
 		CCC887551A77913200EDA5E6 /* CustomTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableCell.h; sourceTree = "<group>"; };
 		CCC887561A77913200EDA5E6 /* CustomTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableCell.m; sourceTree = "<group>"; };
-		CCC8875B1A77CB9100EDA5E6 /* Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parser.h; sourceTree = SOURCE_ROOT; };
-		CCC8875C1A77CB9100EDA5E6 /* Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Parser.m; sourceTree = SOURCE_ROOT; };
 		CCC8875E1A77CDEC00EDA5E6 /* CacheController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheController.h; sourceTree = "<group>"; };
 		CCC8875F1A77CDEC00EDA5E6 /* CacheController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheController.m; sourceTree = "<group>"; };
 		CCC887611A7A24C500EDA5E6 /* DBService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBService.h; sourceTree = "<group>"; };
@@ -176,8 +176,8 @@
 				CC782E2B1A70EED600A24CE3 /* Tweets.m */,
 				CC16E2F71A77631100E1B081 /* Tweet.h */,
 				CC16E2F81A77631100E1B081 /* Tweet.m */,
-				CCC8875B1A77CB9100EDA5E6 /* Parser.h */,
-				CCC8875C1A77CB9100EDA5E6 /* Parser.m */,
+				CC485B6F1A824CF4009B60E8 /* Parser.h */,
+				CC485B701A824CF4009B60E8 /* Parser.m */,
 				CCC887611A7A24C500EDA5E6 /* DBService.h */,
 				CCC887621A7A24C500EDA5E6 /* DBService.m */,
 				CCC887641A7A2C1E00EDA5E6 /* FileSystem.h */,
@@ -362,7 +362,6 @@
 			files = (
 				CC782E0A1A70ED2100A24CE3 /* ViewController.m in Sources */,
 				CC782E071A70ED2100A24CE3 /* AppDelegate.m in Sources */,
-				CCC8875D1A77CB9100EDA5E6 /* Parser.m in Sources */,
 				CC782E041A70ED2100A24CE3 /* main.m in Sources */,
 				CC16E2F91A77631100E1B081 /* Tweet.m in Sources */,
 				CCC887601A77CDEC00EDA5E6 /* CacheController.m in Sources */,
@@ -372,6 +371,7 @@
 				CC485B6E1A7E94E6009B60E8 /* Prefetcher.m in Sources */,
 				CC782E2C1A70EED600A24CE3 /* Tweets.m in Sources */,
 				CCC887691A7A311000EDA5E6 /* Coder.m in Sources */,
+				CC485B711A824CF4009B60E8 /* Parser.m in Sources */,
 				CCC887571A77913200EDA5E6 /* CustomTableCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
