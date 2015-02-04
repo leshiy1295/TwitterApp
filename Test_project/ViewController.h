@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SettingsViewController.h"
 
-@interface ViewController : UIViewController
-
-
+@interface ViewController : UIViewController<UINavigationControllerDelegate> {
+    NSTimer *timer;
+    IBOutlet UILabel *timerLabel;
+    IBOutlet UIButton *signInOutButton;
+}
 @end
-

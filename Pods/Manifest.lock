@@ -1,0 +1,22 @@
+PODS:
+  - FMDB (2.5):
+    - FMDB/standard (= 2.5)
+  - FMDB/common (2.5)
+  - FMDB/standard (2.5):
+    - FMDB/common
+  - gtm-oauth (0.0.1):
+    - gtm-oauth/nibs (= 0.0.1)
+  - gtm-oauth/nibs (0.0.1)
+  - SBJson (3.1.1)
+
+DEPENDENCIES:
+  - FMDB
+  - gtm-oauth
+  - SBJson (~> 3.1.1)
+
+SPEC CHECKSUMS:
+  FMDB: 0efa188cf0dd1ce82c27a478cd5f5fa245308677
+  gtm-oauth: 3c779195cf6c9ef3d79b791b742da6679d0e0b89
+  SBJson: 2d3fad36907ed74a3d77dbeaab0747f382eafc1c
+
+COCOAPODS: 0.35.0
