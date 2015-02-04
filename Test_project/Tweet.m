@@ -38,7 +38,7 @@
         [[DBService sharedInstance] queryGetImageDataByTweetId:[self tweetId] url:[self userAvatarURL]
                                       complete:^(NSData *data) {
                                           typeof(self) sself = wself;
-                                          if (sself != nil) {
+                                          if (sself) {
                                               NSLog(@"complete: %d, data: %d", [sself tweetId], data == nil);
                                               if (data != nil) {
                                                   [sself setImageData:data];

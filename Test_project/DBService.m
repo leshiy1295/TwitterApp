@@ -13,8 +13,8 @@
 #import "Tweet.h"
 
 @implementation DBService {
-    FMDatabaseQueue *queue;
-    dispatch_queue_t serialQuery;
+    FMDatabaseQueue *_queue;
+    dispatch_queue_t _serialQuery;
 }
 
 +(id)sharedInstance {
@@ -33,16 +33,16 @@
         NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
         NSString *dbPath = [documentsPath stringByAppendingPathComponent:@"tweets.db"];
         NSLog(@"%@",dbPath);
-        self->queue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
-        self->serialQuery = dispatch_queue_create("Serial database queue", DISPATCH_QUEUE_SERIAL);
+        _queue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
+        _serialQuery = dispatch_queue_create("Serial database queue", DISPATCH_QUEUE_SERIAL);
         [self dbSchemeCheck];
     }
     return self;
 }
 
 -(void)dbSchemeCheck {
-    dispatch_async(self->serialQuery, ^{
-        [self->queue inDatabase:^(FMDatabase *db) {
+    dispatch_async(_serialQuery, ^{
+        [_queue inDatabase:^(FMDatabase *db) {
             NSString *sql = @"CREATE TABLE IF NOT EXISTS `Tweets` ("
             "  `id` BIGINT NOT NULL,"
             "  `username` VARCHAR(255) NOT NULL,"
@@ -58,10 +58,10 @@
 }
 
 -(void)queryGetLastId:(void (^)(NSUInteger lastId))complete {
-    dispatch_async(self->serialQuery, ^{
+    dispatch_async(_serialQuery, ^{
         NSLog(@"start:queryGetLastId");
         NSUInteger __block lastId = 0;
-        [self->queue inDatabase:^(FMDatabase *db) {
+        [_queue inDatabase:^(FMDatabase *db) {
             NSString *sql = @"SELECT MAX(`id`) FROM `Tweets`;";
             NSLog(@"query: %@", sql);
             FMResultSet *result = [db executeQuery:sql];
@@ -80,24 +80,25 @@
 
 -(void)queryGetSavedTweetsWithLimit:(NSUInteger)limit minDateTime:(NSString *)dateTime //minId:(NSUInteger)minId
                            complete:(void (^)(NSArray *))complete {
-    dispatch_async(self->serialQuery, ^{
+    dispatch_async(_serialQuery, ^{
         NSLog(@"start:queryGetSavedTweets");
-        [self->queue inDatabase:^(FMDatabase *db) {
+        [_queue inDatabase:^(FMDatabase *db) {
             NSMutableArray *tweets = [[NSMutableArray alloc] init];
-//            NSString *sql = @"SELECT `id`, `username`, `text`, `date`, `avatarURL` FROM `Tweets`"
-//                            "WHERE `id` < %lu ORDER BY `id` DESC LIMIT %lu;";
-//            NSLog(@"query: %@, id: %lu, limit: %lu", sql, (unsigned long)minId,
-//                                                (unsigned long)limit);
-//            FMResultSet *result = [db executeQueryWithFormat:sql, minId, limit];
-            NSString *sql = @"SELECT `id`, `username`, `text`, `date`, `avatarURL` FROM `Tweets`"
+            //Below in comments variant for id
+            //  NSString *sql = @"SELECT `id`, `username`, `text`, `date`, `avatarURL` FROM `Tweets`"
+            //  "WHERE `id` < %lu ORDER BY `id` DESC LIMIT %lu;";
+            //  NSLog(@"query: %@, id: %lu, limit: %lu", sql, (unsigned long)minId,
+            //                                                (unsigned long)limit);
+            //  FMResultSet *result = [db executeQueryWithFormat:sql, minId, limit];
+            NSString *sql = @"SELECT `id`, `text`, `date`, `username`, `avatarURL` FROM `Tweets`"
                              " WHERE `date` < %@ ORDER BY `date` DESC LIMIT %lu;";
             NSLog(@"query: %@, date: %@, limit: %lu", sql, dateTime, (unsigned long)limit);
             FMResultSet *result = [db executeQueryWithFormat:sql, dateTime, limit];
             while ([result next]) {
                 Tweet *tweet = [Tweet tweetWithId:[result intForColumnIndex:0]
-                                             text:[result stringForColumnIndex:2]
-                                             date:[result stringForColumnIndex:3]
-                                         username:[result stringForColumnIndex:1]
+                                             text:[result stringForColumnIndex:1]
+                                             date:[result stringForColumnIndex:2]
+                                         username:[result stringForColumnIndex:3]
                                     userAvatarURL:[result stringForColumnIndex:4]];
                 [tweets addObject:tweet];
             }
@@ -111,9 +112,9 @@
 }
 
 -(void)querySaveTweets:(NSArray *)tweets complete:(void (^)(NSArray *))complete {
-    dispatch_async(self->serialQuery, ^{
+    dispatch_async(_serialQuery, ^{
         NSLog(@"start:querySaveTweets");
-        [self->queue inDatabase:^(FMDatabase *db) {
+        [_queue inDatabase:^(FMDatabase *db) {
             NSString *selectSql = @"SELECT 1 FROM `Tweets` WHERE `date` = %@;";
             NSString *insertSql = @"INSERT INTO `Tweets` (`id`, `username`, `text`, `date`, `avatarURL`)"
             " VALUES (%lu, %@, %@, %@, %@);";
@@ -138,9 +139,9 @@
 -(void)queryGetImageDataByTweetId:(NSUInteger)tweetId
                               url:(NSString *)url
                          complete:(void (^)(NSData *))complete {
-    dispatch_async(self->serialQuery, ^{
+    dispatch_async(_serialQuery, ^{
         NSLog(@"start:queryGetImageData");
-        [self->queue inDatabase:^(FMDatabase *db) {
+        [_queue inDatabase:^(FMDatabase *db) {
             NSString *sql = @"SELECT `imageDataURL` FROM `Tweets` WHERE id = %lu;";
             NSLog(@"query: %@, id: %lu", sql, (unsigned long)tweetId);
             FMResultSet *result = [db executeQueryWithFormat:sql, tweetId];

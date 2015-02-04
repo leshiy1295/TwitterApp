@@ -9,5 +9,5 @@
 #import <Foundation/Foundation.h>
 
 @interface Prefetcher : NSObject
--(void)prefetchImages:(NSArray *)tweets;
++(void)prefetchImages:(NSArray *)tweets;
 @end

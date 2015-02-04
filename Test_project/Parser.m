@@ -10,18 +10,28 @@
 #import "SBJson.h"
 
 @implementation Parser {
-    SBJsonParser *jsonParser;
+    SBJsonParser *_jsonParser;
+    NSDateFormatter *_dateFormatter;
 }
 
 -(id)init {
     self = [super init];
     if (self) {
-        self->jsonParser = [[SBJsonParser alloc] init];
+        _jsonParser = [[SBJsonParser alloc] init];
+        _dateFormatter = [[NSDateFormatter alloc] init];
     }
     return self;
 }
 
 -(NSArray *)parse:(NSString *)data {
-    return [jsonParser objectWithString:data];
+    return [_jsonParser objectWithString:data];
+}
+
+-(NSString *)changeDateFormatWithString:(NSString *)dateString fromFormat:(NSString *)fromFormat
+                    toFormat:(NSString *)toFormat {
+    [_dateFormatter setDateFormat:fromFormat];
+    NSDate *date = [_dateFormatter dateFromString:dateString];
+    [_dateFormatter setDateFormat:toFormat];
+    return [_dateFormatter stringFromDate:date];
 }
 @end

@@ -29,16 +29,16 @@
 -(id)init {
     self = [super init];
     if (self) {
-        self->_cache = [[NSCache alloc] init];
+        _cache = [[NSCache alloc] init];
     }
     return self;
 }
 
 -(NSData *)getImageDataByURLString:(NSString *)url {
-    return [self->_cache objectForKey:url];
+    return [_cache objectForKey:url];
 }
 
 -(void)saveImageDataWithURLString:(NSData *)imageData url:(NSString *)url {
-    [self->_cache setObject:imageData forKey:url];
+    [_cache setObject:imageData forKey:url];
 }
 @end

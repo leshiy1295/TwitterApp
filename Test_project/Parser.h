@@ -10,4 +10,6 @@
 
 @interface Parser : NSObject
 -(NSArray *)parse:(NSString *)data;
+-(NSString *)changeDateFormatWithString:(NSString *)dateString fromFormat:(NSString *)fromFormat
+                       toFormat:(NSString *)toFormat;
 @end

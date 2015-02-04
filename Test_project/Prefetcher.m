@@ -9,20 +9,11 @@
 #import "Prefetcher.h"
 #import "Tweet.h"
 
-@interface Prefetcher ()
-@property (nonatomic, copy) NSArray *tArray;
-@end
-
 @implementation Prefetcher
--(void)prefetchImages:(NSArray *)tweets {
-    self.tArray = tweets;
-    __weak typeof(self) wself = self;
-    typeof(self) sself = wself;
-    if (sself != nil) {
-        for (Tweet *tweet in sself.tArray) {
-            if ([tweet imageData] == nil) {
-                [tweet queryGetImageData];
-            }
++(void)prefetchImages:(NSArray *)tweets {
+    for (Tweet *tweet in tweets) {
+        if ([tweet imageData] == nil) {
+            [tweet queryGetImageData];
         }
     }
 }

@@ -20,7 +20,6 @@
     NSUInteger _seconds;
     UITableView *_tableView;
     NSArray *_tweets;
-    Prefetcher *prefetcher;
 }
 
 NSString *const kShouldShowAvatars = @"shouldShowAvatars";
@@ -33,12 +32,11 @@ const int SECONDS_COOLDOWN = 60;
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showTweets:) name:tweetsAreReady object:nil];
-    prefetcher = [[Prefetcher alloc] init];
-    self->_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 150, self.view.frame.size.width,
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 150, self.view.frame.size.width,
                                                                      self.view.frame.size.height - 150)];
-    self->_tableView.delegate = self;
-    self->_tableView.dataSource = self;
-    [self.view addSubview:self->_tableView];
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    [self.view addSubview:_tableView];
     [self initStartParams];
 }
 
@@ -61,16 +59,16 @@ const int SECONDS_COOLDOWN = 60;
 }
 
 -(void)substractTime {
-    [timerLabel setText:[NSString stringWithFormat:@"Time: %lu", (unsigned long)--(self->_seconds)]];
+    [timerLabel setText:[NSString stringWithFormat:@"Time: %lu", (unsigned long)--_seconds]];
     
-    if (self->_seconds == 0) {
-        self->_seconds = SECONDS_COOLDOWN;
+    if (_seconds == 0) {
+        _seconds = SECONDS_COOLDOWN;
         [self queryNewTweets];
     }
 }
 
 -(void)startTimer {
-    self->_seconds = SECONDS_COOLDOWN;
+    _seconds = SECONDS_COOLDOWN;
     timer = [NSTimer scheduledTimerWithTimeInterval:1.0f
                                              target:self
                                            selector:@selector(substractTime)
@@ -99,9 +97,9 @@ const int SECONDS_COOLDOWN = 60;
 
 -(void)toggleShouldShowAvatars:(BOOL)isOn {
     if (isOn) {
-        [prefetcher prefetchImages:self->_tweets];
+        [Prefetcher prefetchImages:_tweets];
     }
-    [self->_tableView reloadData];
+    [_tableView reloadData];
     return [[NSUserDefaults standardUserDefaults] setBool:isOn forKey:kShouldShowAvatars];
 }
 
@@ -122,12 +120,12 @@ const int SECONDS_COOLDOWN = 60;
     if (![[Tweets sharedInstance] isSignedIn]) {
         [signInOutButton setTitle:@"Sign in.." forState:0];
         [timerLabel setHidden:YES];
-        [self->_tableView removeFromSuperview];
+        [_tableView removeFromSuperview];
     } else {
         [signInOutButton setTitle:@"Sign out" forState:0];
         [timerLabel setHidden:NO];
-        [timerLabel setText:[NSString stringWithFormat:@"Time: %i", self->_seconds]];
-        [self.view addSubview:self->_tableView];
+        [timerLabel setText:[NSString stringWithFormat:@"Time: %i", _seconds]];
+        [self.view addSubview:_tableView];
     }
 }
 
@@ -236,7 +234,7 @@ const int SECONDS_COOLDOWN = 60;
         [[Tweets sharedInstance] setAuthentication:auth];
         
         [self startTimer];
-        self->_tweets = @[];
+        _tweets = @[];
         [self queryOldTweets];
         [self queryNewTweets];
         [self updateUI];
@@ -267,54 +265,54 @@ const int SECONDS_COOLDOWN = 60;
         [tweet print];
     }
     if ([notification.userInfo[@"newTweets"]  isEqual: @(YES)]) {
-        [newTweets addObjectsFromArray:self->_tweets];
-         self->_tweets = newTweets;
+        [newTweets addObjectsFromArray:_tweets];
+         _tweets = newTweets;
     } else {
         NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-        [resultArray addObjectsFromArray:self->_tweets];
+        [resultArray addObjectsFromArray:_tweets];
         [resultArray addObjectsFromArray:newTweets];
-        self->_tweets = resultArray;
+        _tweets = resultArray;
     }
     
     if ([self shouldShowAvatars])
-        [prefetcher prefetchImages:newTweets];
+        [Prefetcher prefetchImages:newTweets];
     [self reloadView];
 }
 
 #pragma mark - TableViewDelegate Methods
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([indexPath row] == [self->_tweets count]) {
+    if ([indexPath row] == [_tweets count]) {
         [self queryOldTweets];
     }
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self->_tweets count] + 1;
+    return [_tweets count] + 1;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([indexPath row] != [self->_tweets count])
+    if ([indexPath row] != [_tweets count])
         return 128;
     else
         return 50;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([indexPath row] != [self->_tweets count]) {
+    if ([indexPath row] != [_tweets count]) {
         CustomTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CustomTableCell"];
         if (!cell) {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"CustomTableCell" owner:self options:nil];
             cell = [nib objectAtIndex:0];
         }
-        cell.nameLabel.text = [self->_tweets[[indexPath row]] valueForKey:@"username"];
-        cell.dateLabel.text = [self->_tweets[[indexPath row]] valueForKey:@"date"];
-        cell.textLabel.text = [self->_tweets[[indexPath row]] valueForKey:@"text"];
+        cell.nameLabel.text = [_tweets[[indexPath row]] valueForKey:@"username"];
+        cell.dateLabel.text = [_tweets[[indexPath row]] valueForKey:@"date"];
+        cell.textLabel.text = [_tweets[[indexPath row]] valueForKey:@"text"];
         if ([self shouldShowAvatars]) {
-            if ([self->_tweets[[indexPath row]] imageData] == nil) {
-                [self->_tweets[[indexPath row]] queryGetImageData];
+            if ([_tweets[[indexPath row]] imageData] == nil) {
+                [_tweets[[indexPath row]] queryGetImageData];
             } else {
-                cell.userAvatarImageView.image = [UIImage imageWithData:[self->_tweets[[indexPath row]] valueForKey:@"imageData"]];
+                cell.userAvatarImageView.image = [UIImage imageWithData:[_tweets[[indexPath row]] valueForKey:@"imageData"]];
                 [cell.userAvatarImageView setHidden:NO];
             }
         } else {
@@ -333,6 +331,6 @@ const int SECONDS_COOLDOWN = 60;
 
 #pragma mark - TweetDelegate Methods
 -(void)reloadView {
-    [self->_tableView reloadData];
+    [_tableView reloadData];
 }
 @end
