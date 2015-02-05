@@ -206,14 +206,14 @@ NSString *const kTwitterServiceName = @"Twitter";
                                                  minDateTime:_minDateTimeInThatSession
                                                        //minId:_minIdInThatSession
                                                     complete:^(NSArray *tweets) {
-                                                        typeof(self) sself = wself;
-                                                        if (sself) {
-                                                            if ([tweets count] == 0) {
-                                                                [sself getOlderTweets];
-                                                            }
-                                                            [sself notifyTweetsAreReady:tweets];
-                                                        }
-                                                    }];
+        typeof(self) sself = wself;
+        if (sself) {
+            if ([tweets count] == 0) {
+                [sself getOlderTweets];
+            }
+            [sself notifyTweetsAreReady:tweets];
+        }
+    }];
 }
 
 -(void)getOlderTweets {
@@ -223,7 +223,7 @@ NSString *const kTwitterServiceName = @"Twitter";
 -(void)getNewTweets {
     _newTweets = YES;
     __weak typeof(self) wself = self;
-    [[DBService sharedInstance] queryGetLastId:^(NSUInteger lastId){
+    [[DBService sharedInstance] queryGetLastId:^(NSUInteger lastId) {
         typeof(self) sself = wself;
         if (sself) {
             [sself doAnAuthenticatedAPIFetchWithQueryId:lastId + 1];

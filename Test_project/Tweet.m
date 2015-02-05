@@ -9,6 +9,8 @@
 #import "Tweet.h"
 #import "CacheController.h"
 #import "DBService.h"
+#import "FileSystem.h"
+#import "DataLoader.h"
 
 @implementation Tweet
 +(instancetype)tweetWithId:(NSUInteger)tweetId text:(NSString *)text date:(NSString *)created_at username:(NSString *)name userAvatarURL:(NSString *)url {
@@ -30,26 +32,74 @@
 }
 
 -(void)queryGetImageData {
-    NSData *imageData = [[CacheController sharedInstance] getImageDataByURLString:[self userAvatarURL]];
+    NSData *imageData = [self queryGetImageDataFromCache];
     if (imageData != nil) {
+        NSLog(@"success getting data from cache for id: %lu", (unsigned long)[self tweetId]);
         [self setImageData:imageData];
+        [self.delegate reloadView];
     } else {
-        __weak typeof(self) wself = self;
-        [[DBService sharedInstance] queryGetImageDataByTweetId:[self tweetId] url:[self userAvatarURL]
-                                      complete:^(NSData *data) {
-                                          typeof(self) sself = wself;
-                                          if (sself) {
-                                              NSLog(@"complete: %d, data: %d", [sself tweetId], data == nil);
-                                              if (data != nil) {
-                                                  [sself setImageData:data];
-                                                  [[CacheController sharedInstance]
-                                                   saveImageDataWithURLString:data
-                                                   url:[sself userAvatarURL]];
-                                                  [sself.delegate reloadView];
-                                              }
-                                          }
-                                      }];
+        [self queryGetImageDataFromDB];
     }
+}
+
+-(NSData *)queryGetImageDataFromCache {
+    return [[CacheController sharedInstance] getImageDataByURLString:[self userAvatarURL]];
+}
+
+-(void)querySaveImageDataInCache {
+    [[CacheController sharedInstance] saveImageDataWithURLString:[self imageData] url:[self userAvatarURL]];
+}
+
+-(void)queryGetImageDataFromDB {
+    __weak typeof(self) wself = self;
+    [[DBService sharedInstance] queryGetImageDataURLByTweetId:[self tweetId] url:[self userAvatarURL]
+                                      complete:^(NSString *imageDataURL) {
+      typeof(self) sself = wself;
+      if (sself) {
+          if (imageDataURL) {
+              [sself queryGetImageDataFromFileSystemByURL:imageDataURL];
+          } else {
+              [sself queryGetImageDataFromDataLoader];
+          }
+      }
+    }];
+}
+
+-(void)queryGetImageDataFromFileSystemByURL:(NSString *)imageDataURL {
+    __weak typeof(self) wself = self;
+    [[FileSystem sharedInstance] getDataFromFile:imageDataURL complete:^(NSData *imageData) {
+        typeof(self) sself = wself;
+        if (sself) {
+            [sself setImageData:imageData];
+            [sself querySaveImageDataInCache];
+            [sself.delegate reloadView];
+        }
+    }];
+}
+
+-(void)querySaveImageDataInFileSystemAndDB {
+    __weak typeof(self) wself = self;
+    [[FileSystem sharedInstance] saveToFileWithURLString:[self userAvatarURL]
+                                                    data:[self imageData]
+                                                complete:^(NSString *fileName) {
+        typeof(self) sself = wself;
+        if (sself) {
+            [[DBService sharedInstance] querySaveImageDataPathByTweetId:[sself tweetId] filePath:fileName];
+        }
+    }];
+}
+
+-(void)queryGetImageDataFromDataLoader {
+    __weak typeof(self) wself = self;
+    [[DataLoader sharedInstance] getDataByURLString:[self userAvatarURL] complete:^(NSData *imageData) {
+        typeof(self) sself = wself;
+        if (sself) {
+            [sself setImageData:imageData];
+            [sself querySaveImageDataInFileSystemAndDB];
+            [sself querySaveImageDataInCache];
+            [sself.delegate reloadView];
+        }
+    }];
 }
 
 #pragma mark - Print method

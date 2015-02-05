@@ -44,13 +44,13 @@
     dispatch_async(_serialQuery, ^{
         [_queue inDatabase:^(FMDatabase *db) {
             NSString *sql = @"CREATE TABLE IF NOT EXISTS `Tweets` ("
-            "  `id` BIGINT NOT NULL,"
-            "  `username` VARCHAR(255) NOT NULL,"
-            "  `text` TEXT NOT NULL,"
-            "  `date` DATETIME NOT NULL,"
-            "  `avatarURL` VARCHAR(255) NOT NULL,"
-            "  `imageDataURL` VARCHAR(255) DEFAULT NULL"
-            ");";
+                            "  `id` BIGINT NOT NULL,"
+                            "  `username` VARCHAR(255) NOT NULL,"
+                            "  `text` TEXT NOT NULL,"
+                            "  `date` DATETIME NOT NULL,"
+                            "  `avatarURL` VARCHAR(255) NOT NULL,"
+                            "  `imageDataURL` VARCHAR(255) DEFAULT NULL"
+                            ");";
             NSLog(@"query: %@", sql);
             NSLog(@"Creating table succeed: %hhd", [db executeUpdate:sql]);
         }];
@@ -85,7 +85,7 @@
         [_queue inDatabase:^(FMDatabase *db) {
             NSMutableArray *tweets = [[NSMutableArray alloc] init];
             //Below in comments variant for id
-            //  NSString *sql = @"SELECT `id`, `username`, `text`, `date`, `avatarURL` FROM `Tweets`"
+            //  NSString *sql = @"SELECT `id`, `text`, `date`, `username`, `avatarURL` FROM `Tweets`"
             //  "WHERE `id` < %lu ORDER BY `id` DESC LIMIT %lu;";
             //  NSLog(@"query: %@, id: %lu, limit: %lu", sql, (unsigned long)minId,
             //                                                (unsigned long)limit);
@@ -136,9 +136,9 @@
     });
 }
 
--(void)queryGetImageDataByTweetId:(NSUInteger)tweetId
+-(void)queryGetImageDataURLByTweetId:(NSUInteger)tweetId
                               url:(NSString *)url
-                         complete:(void (^)(NSData *))complete {
+                         complete:(void (^)(NSString *))complete {
     dispatch_async(_serialQuery, ^{
         NSLog(@"start:queryGetImageData");
         [_queue inDatabase:^(FMDatabase *db) {
@@ -147,24 +147,23 @@
             FMResultSet *result = [db executeQueryWithFormat:sql, tweetId];
             if ([result next]) {
                 NSString *imageDataURL = [result stringForColumnIndex:0];
-                NSData *imageData;
-                if (imageDataURL != nil) {
-                    NSLog(@"imageDataURL: %@", imageDataURL);
-                    imageData = [FileSystem getDataFromFile:imageDataURL];
-                } else {
-                    NSURL *imageURL = [NSURL URLWithString:url];
-                    imageData = [NSData dataWithContentsOfURL:imageURL];
-                    imageDataURL = [FileSystem saveToFileWithURLString:url data:imageData];
-                    sql = @"UPDATE `Tweets` SET `imageDataURL` = %@ WHERE id = %lu;";
-                    NSLog(@"query: %@, id: %lu", sql, (unsigned long)tweetId);
-                    NSLog(@"Update succeed: %hhd", [db executeUpdateWithFormat:sql, imageDataURL, tweetId]);
-                }
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"complete:queryGetImageData");
-                    complete(imageData);
+                    NSLog(@"complete:queryGetImageData for id: %lu", (unsigned long)tweetId);
+                    complete(imageDataURL);
                 });
             }
             [result close];
+        }];
+    });
+}
+
+-(void)querySaveImageDataPathByTweetId:(NSUInteger)tweetId filePath:(NSString *)filePath {
+    dispatch_async(_serialQuery, ^{
+        NSLog(@"start:querySaveImageData");
+        [_queue inDatabase:^(FMDatabase *db) {
+            NSString *sql = @"UPDATE `Tweets` SET `imageDataURL` = %@ WHERE id = %lu;";
+            NSLog(@"query: %@, id: %lu", sql, (unsigned long)tweetId);
+            NSLog(@"Update succeed: %hhd", [db executeUpdateWithFormat:sql, filePath, tweetId]);
         }];
     });
 }

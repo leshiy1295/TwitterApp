@@ -11,6 +11,7 @@
 		CC16E2F31A76538700E1B081 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC16E2F11A76538700E1B081 /* SettingsViewController.m */; };
 		CC16E2F41A76538700E1B081 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CC16E2F21A76538700E1B081 /* SettingsViewController.xib */; };
 		CC16E2F91A77631100E1B081 /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = CC16E2F81A77631100E1B081 /* Tweet.m */; };
+		CC29DDC91A8368BB007A056F /* DataLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = CC29DDC81A8368BB007A056F /* DataLoader.m */; };
 		CC485B6E1A7E94E6009B60E8 /* Prefetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = CC485B6D1A7E94E6009B60E8 /* Prefetcher.m */; };
 		CC485B711A824CF4009B60E8 /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = CC485B701A824CF4009B60E8 /* Parser.m */; };
 		CC782E041A70ED2100A24CE3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CC782E031A70ED2100A24CE3 /* main.m */; };
@@ -47,6 +48,8 @@
 		CC16E2F21A76538700E1B081 /* SettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
 		CC16E2F71A77631100E1B081 /* Tweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tweet.h; sourceTree = "<group>"; };
 		CC16E2F81A77631100E1B081 /* Tweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tweet.m; sourceTree = "<group>"; };
+		CC29DDC71A8368BB007A056F /* DataLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataLoader.h; sourceTree = "<group>"; };
+		CC29DDC81A8368BB007A056F /* DataLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataLoader.m; sourceTree = "<group>"; };
 		CC485B6C1A7E94E6009B60E8 /* Prefetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefetcher.h; sourceTree = "<group>"; };
 		CC485B6D1A7E94E6009B60E8 /* Prefetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Prefetcher.m; sourceTree = "<group>"; };
 		CC485B6F1A824CF4009B60E8 /* Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parser.h; sourceTree = "<group>"; };
@@ -186,6 +189,8 @@
 				CCC887681A7A311000EDA5E6 /* Coder.m */,
 				CC485B6C1A7E94E6009B60E8 /* Prefetcher.h */,
 				CC485B6D1A7E94E6009B60E8 /* Prefetcher.m */,
+				CC29DDC71A8368BB007A056F /* DataLoader.h */,
+				CC29DDC81A8368BB007A056F /* DataLoader.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -360,6 +365,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC29DDC91A8368BB007A056F /* DataLoader.m in Sources */,
 				CC782E0A1A70ED2100A24CE3 /* ViewController.m in Sources */,
 				CC782E071A70ED2100A24CE3 /* AppDelegate.m in Sources */,
 				CC782E041A70ED2100A24CE3 /* main.m in Sources */,
