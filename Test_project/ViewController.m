@@ -103,10 +103,6 @@ const int SECONDS_COOLDOWN = 60;
     return [[NSUserDefaults standardUserDefaults] setBool:isOn forKey:kShouldShowAvatars];
 }
 
--(void)closeSettingsView {
-    [self dismissViewControllerAnimated:YES completion:^{}];
-}
-
 #pragma mark - UI Methods
 -(IBAction)onSignInOutButtonClick:(id)sender {
     if (![[Tweets sharedInstance] isSignedIn]) {
@@ -133,7 +129,7 @@ const int SECONDS_COOLDOWN = 60;
     SettingsViewController *settingsViewController;
     settingsViewController = [[SettingsViewController alloc] init];
     settingsViewController.delegate = self;
-    [self presentViewController:settingsViewController animated:YES completion:^{}];
+    [[self navigationController] pushViewController:settingsViewController animated:YES];
 }
 
 #pragma mark - OAuth methods
@@ -202,11 +198,10 @@ const int SECONDS_COOLDOWN = 60;
     // in
     [viewControllerTouch setBrowserCookiesURL:[NSURL URLWithString:@"https://api.twitter.com/"]];
     
-    [self presentViewController:viewControllerTouch animated:YES completion:^{}];
+    [[self navigationController] pushViewController:viewControllerTouch animated:YES];
 }
 
 -(void)viewController:(GTMOAuthViewControllerTouch *)viewController finishedWithAuth:(GTMOAuthAuthentication *)auth error:(NSError *)error {
-    [self dismissViewControllerAnimated:YES completion:^{}];
     if (error != nil) {
         //Authentication failed (perhaps the user denied access, or closed the
         //window before granting success)

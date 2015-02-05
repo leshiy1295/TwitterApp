@@ -10,7 +10,7 @@
 
 @protocol SettingsViewControllerDelegate;
 
-@interface SettingsViewController : UIViewController {
+@interface SettingsViewController : UIViewController<UINavigationControllerDelegate> {
     IBOutlet UISwitch *shouldSaveKeychainSwitch;
     IBOutlet UISwitch *shouldShowAvatars;
 }
@@ -23,5 +23,4 @@
 -(void)toggleShouldSaveKeychain:(BOOL)isOn;
 -(BOOL)shouldShowAvatars;
 -(void)toggleShouldShowAvatars:(BOOL)isOn;
--(void)closeSettingsView;
 @end

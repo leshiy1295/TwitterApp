@@ -13,10 +13,13 @@
 @end
 
 @implementation AppDelegate
-
+@synthesize window = _window;
+@synthesize navigationController = _navigationController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [_window addSubview:[_navigationController view]];
+    [_window makeKeyAndVisible];
     return YES;
 }
 
@@ -40,6 +43,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end

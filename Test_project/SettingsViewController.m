@@ -17,6 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.navigationItem.title = @"Settings";
     [shouldSaveKeychainSwitch setOn:[self.delegate shouldSaveKeychain]];
     [shouldShowAvatars setOn:[self.delegate shouldShowAvatars]];
 }
@@ -41,9 +42,5 @@
 
 -(IBAction)onShouldSaveKeyChange:(id)sender {
     [self.delegate toggleShouldSaveKeychain:[sender isOn]];
-}
-
--(IBAction)onBackButtonClick:(id)sender{
-    [self.delegate closeSettingsView];
 }
 @end
