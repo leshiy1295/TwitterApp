@@ -16,7 +16,7 @@
                               //minId:(NSUInteger)minId
                            complete:(void (^)(NSArray *tweets))complete;
 -(void)querySaveTweets:(NSArray *)tweets complete:(void (^)(NSArray *tweets))complete;
--(void)queryGetImageDataURLByTweetId:(NSUInteger)tweetId url:(NSString *)url
+-(void)queryGetImageDataURLByUserId:(NSUInteger)userId url:(NSString *)url
                          complete:(void (^)(NSString *imageDataURL))complete;
--(void)querySaveImageDataPathByTweetId:(NSUInteger)tweetId filePath:(NSString *)filePath;
+-(void)querySaveImageDataPathByUserId:(NSUInteger)userId filePath:(NSString *)filePath;
 @end

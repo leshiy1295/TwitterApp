@@ -13,17 +13,22 @@
 #import "DataLoader.h"
 
 @implementation Tweet
-+(instancetype)tweetWithId:(NSUInteger)tweetId text:(NSString *)text date:(NSString *)created_at username:(NSString *)name userAvatarURL:(NSString *)url {
-    Tweet *newTweet = [[self alloc] initWithId:(NSUInteger)tweetId text:(NSString *)text date:(NSString *)created_at username:(NSString *)name userAvatarURL:(NSString *)url];
++(instancetype)tweetWithId:(NSUInteger)tweetId text:(NSString *)text date:(NSString *)created_at
+                    userId:(NSUInteger)userId username:(NSString *)name userAvatarURL:(NSString *)url {
+    Tweet *newTweet = [[self alloc] initWithId:(NSUInteger)tweetId text:(NSString *)text
+                                          date:(NSString *)created_at userId:(NSUInteger)userId
+                                      username:(NSString *)name userAvatarURL:(NSString *)url];
     return newTweet;
 }
 
--(id)initWithId:(NSUInteger)tweetId text:(NSString *)text date:(NSString *)created_at username:(NSString *)name userAvatarURL:(NSString *)url {
+-(id)initWithId:(NSUInteger)tweetId text:(NSString *)text date:(NSString *)created_at userId:(NSUInteger)userId
+       username:(NSString *)name userAvatarURL:(NSString *)url {
     self = [super init];
     if (self) {
         _tweetId = tweetId;
         _text = text;
         _date = created_at;
+        _userId = userId;
         _username = name;
         _userAvatarURL = url;
         _imageData = nil;
@@ -68,7 +73,7 @@
 
 -(void)queryGetImageDataFromDB {
     __weak typeof(self) wself = self;
-    [[DBService sharedInstance] queryGetImageDataURLByTweetId:[self tweetId] url:[self userAvatarURL]
+    [[DBService sharedInstance] queryGetImageDataURLByUserId:[self userId] url:[self userAvatarURL]
                                       complete:^(NSString *imageDataURL) {
       typeof(self) sself = wself;
       if (sself) {
@@ -100,7 +105,7 @@
                                                 complete:^(NSString *fileName) {
         typeof(self) sself = wself;
         if (sself) {
-            [[DBService sharedInstance] querySaveImageDataPathByTweetId:[sself tweetId] filePath:fileName];
+            [[DBService sharedInstance] querySaveImageDataPathByUserId:[sself userId] filePath:fileName];
         }
     }];
 }
@@ -121,9 +126,10 @@
 #pragma mark - Print method
 -(void)print {
 //    NSLog(@"{\n");
-    NSLog(@" id: %d,\n", [self tweetId]);
+    NSLog(@" id: %lu,\n", (unsigned long)[self tweetId]);
 //    NSLog(@" text: %@,\n", [self text]);
 //    NSLog(@" date: %@,\n", [self date]);
+//    NSLog(@" userId: %lu", (unsigned long)[self userId]);
 //    NSLog(@" username: %@,\n", [self username]);
 //    NSLog(@" userAvatarURL: %@\n", [self userAvatarURL]);
 //    NSLog(@"}\n");

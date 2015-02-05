@@ -141,6 +141,7 @@ NSString *const kTwitterServiceName = @"Twitter";
                 Tweet *tweet = [Tweet tweetWithId:(NSUInteger)[tweetData valueForKey:@"id"]
                                              text:[tweetData valueForKey:@"text"]
                                              date:date
+                                           userId:(NSUInteger)[tweetData valueForKeyPath:@"user.id"]
                                          username:[tweetData valueForKeyPath:@"user.name"]
                                     userAvatarURL:[tweetData valueForKeyPath:@"user.profile_image_url"]];
                 [tweets addObject:tweet];
@@ -222,13 +223,15 @@ NSString *const kTwitterServiceName = @"Twitter";
 
 -(void)getNewTweets {
     _newTweets = YES;
-    __weak typeof(self) wself = self;
-    [[DBService sharedInstance] queryGetLastId:^(NSUInteger lastId) {
-        typeof(self) sself = wself;
-        if (sself) {
-            [sself doAnAuthenticatedAPIFetchWithQueryId:lastId + 1];
-        }
-    }];
+    [self doAnAuthenticatedAPIFetchWithQueryId:0];
+//Deprecated because since_id isn't used in request
+//    __weak typeof(self) wself = self;
+//    [[DBService sharedInstance] queryGetLastId:^(NSUInteger lastId) {
+//        typeof(self) sself = wself;
+//        if (sself) {
+//            [sself doAnAuthenticatedAPIFetchWithQueryId:lastId + 1];
+//        }
+//    }];
 }
 @end
 
