@@ -32,33 +32,38 @@
 }
 
 -(void)queryGetImageData {
-    if (![self queryWasImageDataAsked]) {
-        [self querySetImageDataAskedFlag];
-        NSData *imageData = [self queryGetImageDataFromCache];
-        if (imageData != nil) {
-            NSLog(@"success getting data from cache for id: %lu", (unsigned long)[self tweetId]);
-            [self setImageData:imageData];
-            [self.delegate reloadView];
-        } else {
-            [self queryGetImageDataFromDB];
+    [self queryGetImageDataFromCache];
+}
+
+-(void)queryWasImageDataAsked {
+    __weak typeof(self) wself = self;
+    [[CacheController sharedInstance] queryWasImageDataAskedByURLString:[self userAvatarURL] complete:^{
+        typeof(self) sself = wself;
+        if (sself) {
+            [sself queryGetImageDataFromDB];
         }
-    }
+    }];
 }
 
--(BOOL)queryWasImageDataAsked {
-    return [[CacheController sharedInstance] wasImageDataAskedByURLString:[self userAvatarURL]];
-}
-
--(void)querySetImageDataAskedFlag {
-    [[CacheController sharedInstance] setImageDataAskedFlagByURLString:[self userAvatarURL]];
-}
-
--(NSData *)queryGetImageDataFromCache {
-    return [[CacheController sharedInstance] getImageDataByURLString:[self userAvatarURL]];
+-(void)queryGetImageDataFromCache {
+    __weak typeof(self) wself = self;
+    [[CacheController sharedInstance] queryGetImageDataByURLString:[self userAvatarURL]
+                                                                 complete:^(NSData *imageData) {
+         typeof(self) sself = wself;
+         if (sself) {
+             if (imageData != nil) {
+                 NSLog(@"success getting data from cache for id: %lu", (unsigned long)[sself tweetId]);
+                 [sself setImageData:imageData];
+                 [sself.delegate reloadView];
+             } else {
+                 [sself queryWasImageDataAsked];
+             }
+         }
+     }];
 }
 
 -(void)querySaveImageDataInCache {
-    [[CacheController sharedInstance] saveImageDataWithURLString:[self imageData] url:[self userAvatarURL]];
+    [[CacheController sharedInstance] querySaveImageDataWithURLString:[self imageData] url:[self userAvatarURL]];
 }
 
 -(void)queryGetImageDataFromDB {

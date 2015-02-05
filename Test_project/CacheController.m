@@ -13,6 +13,7 @@
 @end
 
 @implementation CacheController {
+    dispatch_queue_t _serialQueue;
     NSCache *_cache;
     NSCache *_didImageDataAskedFlagsCache;
 }
@@ -32,24 +33,35 @@
     if (self) {
         _cache = [[NSCache alloc] init];
         _didImageDataAskedFlagsCache = [[NSCache alloc] init];
+        _serialQueue = dispatch_queue_create("Serial cache queue", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
 
--(NSData *)getImageDataByURLString:(NSString *)url {
-    return [_cache objectForKey:url];
+-(void)queryGetImageDataByURLString:(NSString *)url complete:(void (^)(NSData *))complete {
+    dispatch_async(_serialQueue, ^{
+        NSData *data = [_cache objectForKey:url];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            complete(data);
+        });
+    });
 }
 
--(void)saveImageDataWithURLString:(NSData *)imageData url:(NSString *)url {
-    [_cache setObject:imageData forKey:url];
+-(void)querySaveImageDataWithURLString:(NSData *)imageData url:(NSString *)url {
+    dispatch_async(_serialQueue, ^{
+        [_cache setObject:imageData forKey:url];
+    });
 }
 
--(BOOL)wasImageDataAskedByURLString:(NSString *)url {
-    id object = [_didImageDataAskedFlagsCache objectForKey:url];
-    return object != nil;
-}
-
--(void)setImageDataAskedFlagByURLString:(NSString *)url {
-    [_didImageDataAskedFlagsCache setObject:@(1) forKey:url];
+-(void)queryWasImageDataAskedByURLString:(NSString *)url complete:(void (^)(void))complete {
+    dispatch_async(_serialQueue, ^{
+        id object = [_didImageDataAskedFlagsCache objectForKey:url];
+        if (object == nil) {
+            [_didImageDataAskedFlagsCache setObject:@(1) forKey:url];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                complete();
+            });
+        }
+    });
 }
 @end
