@@ -14,6 +14,7 @@
 
 @implementation CacheController {
     NSCache *_cache;
+    NSCache *_didImageDataAskedFlagsCache;
 }
 
 +(id)sharedInstance {
@@ -30,6 +31,7 @@
     self = [super init];
     if (self) {
         _cache = [[NSCache alloc] init];
+        _didImageDataAskedFlagsCache = [[NSCache alloc] init];
     }
     return self;
 }
@@ -40,5 +42,14 @@
 
 -(void)saveImageDataWithURLString:(NSData *)imageData url:(NSString *)url {
     [_cache setObject:imageData forKey:url];
+}
+
+-(BOOL)wasImageDataAskedByURLString:(NSString *)url {
+    id object = [_didImageDataAskedFlagsCache objectForKey:url];
+    return object != nil;
+}
+
+-(void)setImageDataAskedFlagByURLString:(NSString *)url {
+    [_didImageDataAskedFlagsCache setObject:@(1) forKey:url];
 }
 @end

@@ -32,14 +32,25 @@
 }
 
 -(void)queryGetImageData {
-    NSData *imageData = [self queryGetImageDataFromCache];
-    if (imageData != nil) {
-        NSLog(@"success getting data from cache for id: %lu", (unsigned long)[self tweetId]);
-        [self setImageData:imageData];
-        [self.delegate reloadView];
-    } else {
-        [self queryGetImageDataFromDB];
+    if (![self queryWasImageDataAsked]) {
+        [self querySetImageDataAskedFlag];
+        NSData *imageData = [self queryGetImageDataFromCache];
+        if (imageData != nil) {
+            NSLog(@"success getting data from cache for id: %lu", (unsigned long)[self tweetId]);
+            [self setImageData:imageData];
+            [self.delegate reloadView];
+        } else {
+            [self queryGetImageDataFromDB];
+        }
     }
+}
+
+-(BOOL)queryWasImageDataAsked {
+    return [[CacheController sharedInstance] wasImageDataAskedByURLString:[self userAvatarURL]];
+}
+
+-(void)querySetImageDataAskedFlag {
+    [[CacheController sharedInstance] setImageDataAskedFlagByURLString:[self userAvatarURL]];
 }
 
 -(NSData *)queryGetImageDataFromCache {

@@ -9,6 +9,8 @@
 
 @interface CacheController : NSObject
 +(id)sharedInstance;
+-(BOOL)wasImageDataAskedByURLString:(NSString *)url;
+-(void)setImageDataAskedFlagByURLString:(NSString *)url;
 -(NSData *)getImageDataByURLString:(NSString *)url;
 -(void)saveImageDataWithURLString:(NSData *)imageData url:(NSString *)url;
 @end
