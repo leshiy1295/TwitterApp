@@ -32,8 +32,8 @@ const int SECONDS_COOLDOWN = 60;
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showTweets:) name:tweetsAreReady object:nil];
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 150, self.view.frame.size.width,
-                                                                     self.view.frame.size.height - 150)];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 120, self.view.frame.size.width,
+                                                                     self.view.frame.size.height - 120)];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     [self.view addSubview:_tableView];

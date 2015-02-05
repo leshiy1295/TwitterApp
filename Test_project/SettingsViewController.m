@@ -18,8 +18,17 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.navigationItem.title = @"Settings";
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(back)];
+    self.navigationItem.leftBarButtonItem = backButton;
     [shouldSaveKeychainSwitch setOn:[self.delegate shouldSaveKeychain]];
     [shouldShowAvatars setOn:[self.delegate shouldShowAvatars]];
+}
+
+-(void)back {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning {
