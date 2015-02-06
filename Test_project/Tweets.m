@@ -39,11 +39,15 @@ NSString *const kTwitterServiceName = @"Twitter";
 -(id)init {
     self = [super init];
     if (self) {
-        _minIdInThatSession = -1;
-        _minDateTimeInThatSession = @"9999-12-12 23:59:59";
-        _maxDateTimeInThatSession = @"0000-00-00 00:00:00";
+        [self initStartParameters];
     }
     return self;
+}
+
+-(void)initStartParameters {
+    _minIdInThatSession = -1;
+    _minDateTimeInThatSession = @"9999-12-12 23:59:59";
+    _maxDateTimeInThatSession = @"0000-00-00 00:00:00";
 }
 
 #pragma mark - OAuth methods
@@ -198,14 +202,14 @@ NSString *const kTwitterServiceName = @"Twitter";
     }];
 }
 
--(void)getOldTweets {
+-(void)getOldTweetsFirstly:(BOOL)firstly {
+    if (firstly) {
+        [self initStartParameters];
+    }
     _newTweets = NO;
     __weak typeof(self) wself = self;
-    //Old tweets should be found by id, but in that case they won't be sorted by date. Because of that here
-    //parameter minId is in comments and there is another parameter - minDateTime. So really
     [[DBService sharedInstance] queryGetSavedTweetsWithLimit:amountOfTweetsToAsk
                                                  minDateTime:_minDateTimeInThatSession
-                                                       //minId:_minIdInThatSession
                                                     complete:^(NSArray *tweets) {
         typeof(self) sself = wself;
         if (sself) {
@@ -224,14 +228,6 @@ NSString *const kTwitterServiceName = @"Twitter";
 -(void)getNewTweets {
     _newTweets = YES;
     [self doAnAuthenticatedAPIFetchWithQueryId:0];
-//Deprecated because since_id isn't used in request
-//    __weak typeof(self) wself = self;
-//    [[DBService sharedInstance] queryGetLastId:^(NSUInteger lastId) {
-//        typeof(self) sself = wself;
-//        if (sself) {
-//            [sself doAnAuthenticatedAPIFetchWithQueryId:lastId + 1];
-//        }
-//    }];
 }
 @end
 

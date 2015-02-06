@@ -15,7 +15,7 @@ FOUNDATION_EXPORT NSString *const tweetsAreReady;
 @interface Tweets : NSObject <NSURLConnectionDelegate>
 +(id)sharedInstance;
 -(void)getNewTweets;
--(void)getOldTweets;
+-(void)getOldTweetsFirstly:(BOOL)firstly;
 -(BOOL)isSignedIn;
 -(GTMOAuthAuthentication *)authForTwitter;
 -(void)setAuthentication:(GTMOAuthAuthentication *)auth;

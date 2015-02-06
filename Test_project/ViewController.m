@@ -51,7 +51,7 @@ const int SECONDS_COOLDOWN = 60;
 
 - (void) initStartParams {
     if ([[Tweets sharedInstance] isSignedIn]) {
-        [self queryOldTweets];
+        [self queryOldTweetsFirstly:YES];
         [self queryNewTweets];
         [self startTimer];
     }
@@ -230,7 +230,7 @@ const int SECONDS_COOLDOWN = 60;
         
         [self startTimer];
         _tweets = @[];
-        [self queryOldTweets];
+        [self queryOldTweetsFirstly:YES];
         [self queryNewTweets];
         [self updateUI];
     }
@@ -244,11 +244,11 @@ const int SECONDS_COOLDOWN = 60;
         [[Tweets sharedInstance] getNewTweets];
 }
 
--(void)queryOldTweets {
+-(void)queryOldTweetsFirstly:(BOOL)firstly {
     if (![[Tweets sharedInstance] isSignedIn])
         [self signInToTwitter];
     else {
-        [[Tweets sharedInstance] getOldTweets];
+        [[Tweets sharedInstance] getOldTweetsFirstly:firstly];
     }
 }
 
@@ -277,7 +277,7 @@ const int SECONDS_COOLDOWN = 60;
 #pragma mark - TableViewDelegate Methods
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([indexPath row] == [_tweets count]) {
-        [self queryOldTweets];
+        [self queryOldTweetsFirstly:NO];
     }
 }
 
