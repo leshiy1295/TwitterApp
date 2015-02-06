@@ -23,6 +23,7 @@
 }
 
 const NSUInteger amountOfTweetsToAsk = 20;
+const NSUInteger maxDbVolume = 1000;
 NSString *const tweetsAreReady = @"tweetsAreReady";
 NSString *const kTwitterServiceName = @"Twitter";
 
@@ -187,11 +188,16 @@ NSString *const kTwitterServiceName = @"Twitter";
                     _maxDateTimeInThatSession = [tweet date];
                 }
             }
+            [sself checkDBVolume];
         }
     });
 }
 
 #pragma mark - DB Methods
+-(void)checkDBVolume {
+    [[DBService sharedInstance] queryCheckVolumeAndDeleteIfNeeded:amountOfTweetsToAsk maxVolume:maxDbVolume];
+}
+
 -(void)saveTweetsInDB:(NSArray *)tweets {
     __weak typeof(self) wself = self;
     [[DBService sharedInstance] querySaveTweets:tweets complete:^(NSArray *tweets) {

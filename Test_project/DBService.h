@@ -13,6 +13,7 @@
 -(void)queryGetSavedTweetsWithLimit:(NSUInteger)limit minDateTime:(NSString *)dateTime
                            complete:(void (^)(NSArray *tweets))complete;
 -(void)querySaveTweets:(NSArray *)tweets complete:(void (^)(NSArray *tweets))complete;
+-(void)queryCheckVolumeAndDeleteIfNeeded:(NSUInteger)count maxVolume:(NSUInteger)maxVolume;
 -(void)queryGetImageDataURLByUserId:(NSUInteger)userId url:(NSString *)url
                          complete:(void (^)(NSString *imageDataURL))complete;
 -(void)querySaveImageDataPathByUserId:(NSUInteger)userId filePath:(NSString *)filePath;

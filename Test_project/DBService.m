@@ -59,7 +59,7 @@
                   ");";
             NSLog(@"query: %@", sql);
             NSLog(@"Creating table succeed: %hhd", [db executeUpdate:sql]);
-            sql = @"CREATE INDEX IF NOT EXISTS `date` ON `Tweets` (`date`);";
+            sql = @"CREATE INDEX IF NOT EXISTS `date_userId` ON `Tweets` (`date`, `userId`);";
         }];
     });
 }
@@ -164,6 +164,27 @@
             NSString *sql = @"UPDATE `User` SET `imageDataURL` = %@ WHERE id = %lu;";
             NSLog(@"query: %@, userId: %lu", sql, (unsigned long)userId);
             NSLog(@"Update succeed: %hhd", [db executeUpdateWithFormat:sql, filePath, (unsigned long)userId]);
+        }];
+    });
+}
+
+-(void)queryCheckVolumeAndDeleteIfNeeded:(NSUInteger)count maxVolume:(NSUInteger)maxVolume {
+    dispatch_async(_serialQuery, ^{
+        [_queue inDatabase:^(FMDatabase *db) {
+            NSString *sql = @"SELECT COUNT(*) FROM `Tweets`;";
+            NSLog(@"query: %@", sql);
+            FMResultSet *result = [db executeQuery:sql];
+            if ([result next]) {
+                NSUInteger countInDb = [result intForColumnIndex:0];
+                NSLog(@"Tweets in DB: %lu", (unsigned long)countInDb);
+                if (countInDb >= maxVolume) {
+                    sql = @"DELETE FROM `Tweets` WHERE `id` IN "
+                          " (SELECT `id` FROM `Tweets` ORDER BY `date` ASC LIMIT %lu);";
+                    NSLog(@"query: %@, limit: %lu", sql, (unsigned long)count);
+                    NSLog(@"Delete succeed: %hhd", [db executeUpdateWithFormat:sql, (unsigned long)count]);
+                }
+            }
+            [result close];
         }];
     });
 }
